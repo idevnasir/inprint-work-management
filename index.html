@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inprint Works Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+    <div class="container mt-4">
+        <img  src="INPRINT LOGO copy.jpg" alt=""  style="max-width: 20%;margin-left: 38%;margin-top: 2%;">
+        <h1 style="padding-left: 23%; margin-top: 4%;">INPRINT WORKS MANAGEMENT</h1>
+        
+
+        <section id="add-job-section" class="mx-auto w-lg-50">
+            <h2>Add New Job</h2>
+            <form>
+                <div class="mb-3">
+                    <label for="date" class="form-label">Date:</label>
+                    <input type="date" id="date" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="client-name" class="form-label">Client Name:</label>
+                    <input type="text" id="client-name" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="client-phone" class="form-label">Client Phone:</label>
+                    <input type="text" id="client-phone" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="work-details" class="form-label">Work Details:</label>
+                    <textarea id="work-details" class="form-control"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="deadline" class="form-label">Deadline:</label>
+                    <input type="date" id="deadline" class="form-control">
+                </div>
+                <div class="mb-3" id="delivery-date-group" style="display: none;">
+                    <label for="delivery" class="form-label">Delivery Date:</label>
+                    <input type="date" id="delivery" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status:</label>
+                    <select id="status" class="form-select" onchange="toggleDeliveryDate()">
+                        <option value="Pending">Pending</option>
+                        <option value="Not Delivered">Not Delivered</option>
+                        <option value="Delivered">Delivered</option>
+                    </select>
+                </div>
+                <button type="button" onclick="addJob()" class="btn btn-primary"  style="border: none;background-color: #79b933;">Add Job</button>
+            </form>
+
+            <div id="edit-form" style="display:none; margin-top: 20px;" class="mt-4 p-3 border rounded">
+                <h3>Edit Job</h3>
+                <form>
+                    <div class="mb-3">
+                        <label for="edit-date" class="form-label">Date:</label>
+                        <input type="date" id="edit-date" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-client-name" class="form-label">Client Name:</label>
+                        <input type="text" id="edit-client-name" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-client-phone" class="form-label">Client Phone:</label>
+                        <input type="text" id="edit-client-phone" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-work-details" class="form-label">Work Details:</label>
+                        <textarea id="edit-work-details" class="form-control"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-deadline" class="form-label">Deadline:</label>
+                        <input type="date" id="edit-deadline" class="form-control">
+                    </div>
+                    <div class="mb-3" id="edit-delivery-date-group" style="display: none;">
+                        <label for="edit-delivery" class="form-label">Delivery Date:</label>
+                        <input type="date" id="edit-delivery" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-status" class="form-label">Status:</label>
+                        <select id="edit-status" class="form-select" onchange="toggleEditDeliveryDate()">
+                            <option value="Pending">Pending</option>
+                            <option value="Not Delivered">Not Delivered</option>
+                            <option value="Delivered">Delivered</option>
+                        </select>
+                    </div>
+                    <input type="hidden" id="edit-job-index">
+                    <button type="button" onclick="saveEditedJob()" class="btn btn-primary">Save Changes</button>
+                    <button type="button" onclick="cancelEdit()" class="btn btn-secondary">Cancel</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="received-jobs-section" class="mt-5">
+            <h2>Received Jobs</h2>
+            <div class="d-flex justify-content-start mb-3">
+                <button onclick="showAllJobs()" class="btn btn-primary me-2"  style="border: none;background-color: #79b933;">Show All Jobs</button>
+                <button onclick="downloadAllJobs()" class="btn btn-secondary">Download All Jobs</button>
+            </div>
+
+            <div id="filter-section" style="display:none;" class="border p-3 rounded mb-4">
+                <h3>Filter Jobs</h3>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <h4>Filter by Date</h4>
+                        <div class="mb-2">
+                            <label for="filter-start-date" class="form-label">Start Date:</label>
+                            <input type="date" id="filter-start-date" class="form-control">
+                        </div>
+                        <div>
+                            <label for="filter-end-date" class="form-label">End Date:</label>
+                            <input type="date" id="filter-end-date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Filter by Status</h4>
+                        <div>
+                            <label for="filter-status" class="form-label">Status:</label>
+                            <select id="filter-status" class="form-select">
+                                <option value="All">All</option>
+                                <option value="Delivered">Delivered</option>
+                                <option value="Not Delivered">Not Delivered</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="filterJobs()" class="btn btn-primary">Filter</button>
+            </div>
+
+            <button id="download-button" style="display:none; margin-top: 10px;" onclick="downloadJobs()" class="btn btn-success">Download Filtered Jobs</button>
+
+            <table id="jobs-table" style="display:none;" class="table table-striped table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Client Name</th>
+                        <th>Client Phone</th>
+                        <th>Work Details</th>
+                        <th>Deadline</th>
+                        <th>Delivery</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="jobs-table-body">
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
