@@ -32,11 +32,12 @@ function addJob() {
     const clientName = document.getElementById('client-name').value;
     const clientPhone = document.getElementById('client-phone').value;
     const workDetails = document.getElementById('work-details').value;
-    const deadline = document.getElementById('deadline').value;
+    const deadline = document.getElementById('deadline').value; // Deadline is now optional
     const delivery = document.getElementById('delivery-date-group').style.display === 'block' ? document.getElementById('delivery').value : '';
     const status = document.getElementById('status').value;
 
-    if (date && clientName && workDetails && deadline) {
+    // Deadline is no longer mandatory in the condition
+    if (date && clientName && workDetails) {
         jobs.push({ date, clientName, clientPhone, workDetails, deadline, delivery, status });
         saveJobs(); // Save to localStorage after adding a job
         clearInputFields();
@@ -45,7 +46,7 @@ function addJob() {
             renderJobs(jobs); // Re-render if the table is visible
         }
     } else {
-        alert('Please fill in the required fields (Date, Client Name, Work Details, Deadline).');
+        alert('Please fill in the required fields (Date, Client Name, Work Details).');
     }
 }
 
@@ -54,7 +55,7 @@ function clearInputFields() {
     document.getElementById('client-name').value = '';
     document.getElementById('client-phone').value = '';
     document.getElementById('work-details').value = '';
-    document.getElementById('deadline').value = '';
+    document.getElementById('deadline').value = ''; // Clear deadline field
     document.getElementById('delivery').value = '';
     document.getElementById('delivery-date-group').style.display = 'none'; // Initially hide
     document.getElementById('status').selectedIndex = 0; // Reset dropdown to the first option
@@ -77,7 +78,7 @@ function renderJobs(jobList) {
             row.insertCell().textContent = job.clientName;
             row.insertCell().textContent = job.clientPhone;
             row.insertCell().textContent = job.workDetails;
-            row.insertCell().textContent = job.deadline;
+            row.insertCell().textContent = job.deadline || '-'; // Display '-' if no deadline
             row.insertCell().textContent = job.delivery || '-';
             row.insertCell().textContent = job.status || '-';
             const actionsCell = row.insertCell();
@@ -107,7 +108,7 @@ function editJob(index) {
     document.getElementById('edit-client-name').value = job.clientName;
     document.getElementById('edit-client-phone').value = job.clientPhone;
     document.getElementById('edit-work-details').value = job.workDetails;
-    document.getElementById('edit-deadline').value = job.deadline;
+    document.getElementById('edit-deadline').value = job.deadline || ''; // Populate if exists
     document.getElementById('edit-delivery').value = job.delivery || '';
     document.getElementById('edit-status').value = job.status || 'Pending';
 
@@ -127,7 +128,7 @@ function saveEditedJob() {
             clientName: document.getElementById('edit-client-name').value,
             clientPhone: document.getElementById('edit-client-phone').value,
             workDetails: document.getElementById('edit-work-details').value,
-            deadline: document.getElementById('edit-deadline').value,
+            deadline: document.getElementById('edit-deadline').value, // Deadline can be empty
             delivery: document.getElementById('edit-delivery-date-group').style.display === 'block' ? document.getElementById('edit-delivery').value : '',
             status: document.getElementById('edit-status').value
         };
@@ -187,7 +188,7 @@ function downloadJobs() {
 
     let csvContent = "Date,Client Name,Client Phone,Work Details,Deadline,Delivery,Status\n";
     filteredJobs.forEach(job => {
-        csvContent += `${job.date},"${job.clientName}","${job.clientPhone}","${job.workDetails}","${job.deadline}","${job.delivery || ''}","${job.status || ''}"\n`;
+        csvContent += `${job.date},"${job.clientName}","${job.clientPhone}","${job.workDetails}","${job.deadline || ''}","${job.delivery || ''}","${job.status || ''}"\n`;
     });
 
     const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
@@ -209,7 +210,7 @@ function downloadAllJobs() {
 
     let csvContent = "Date,Client Name,Client Phone,Work Details,Deadline,Delivery,Status\n";
     jobs.forEach(job => {
-        csvContent += `${job.date},"${job.clientName}","${job.clientPhone}","${job.workDetails}","${job.deadline}","${job.delivery || ''}","${job.status || ''}"\n`;
+        csvContent += `${job.date},"${job.clientName}","${job.clientPhone}","${job.workDetails}","${job.deadline || ''}","${job.delivery || ''}","${job.status || ''}"\n`;
     });
 
     const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
