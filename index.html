@@ -102,7 +102,7 @@
             <div id="filter-section" style="display:none;" class="border p-3 rounded mb-4">
                 <h3>Filter Jobs</h3>
                 <div class="row mb-3">
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="date-filter">
                         <h4>Filter by Date</h4>
                         <div class="mb-2">
                             <label for="filter-start-date" class="form-label">Start Date:</label>
@@ -113,11 +113,22 @@
                             <input type="date" id="filter-end-date" class="form-control">
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="delivery-date-filter" style="display: none;">
+                        <h4>Filter by Delivery Date</h4>
+                        <div class="mb-2">
+                            <label for="filter-start-delivery-date" class="form-label">Start Delivery Date:</label>
+                            <input type="date" id="filter-start-delivery-date" class="form-control">
+                        </div>
+                        <div>
+                            <label for="filter-end-delivery-date" class="form-label">End Delivery Date:</label>
+                            <input type="date" id="filter-end-delivery-date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6 mt-3">
                         <h4>Filter by Status</h4>
                         <div>
                             <label for="filter-status" class="form-label">Status:</label>
-                            <select id="filter-status" class="form-select">
+                            <select id="filter-status" class="form-select" onchange="toggleDeliveryDateFilter()">
                                 <option value="All">All</option>
                                 <option value="Delivered">Delivered</option>
                                 <option value="Not Delivered">Not Delivered</option>
@@ -126,7 +137,7 @@
                         </div>
                     </div>
                 </div>
-                <button onclick="filterJobs()" class="btn btn-primary">Filter</button>
+                <button onclick="filterJobs()" class="btn btn-primary mt-3">Filter</button>
             </div>
 
             <button id="download-button" style="display:none; margin-top: 10px;" onclick="downloadJobs()" class="btn btn-success">Download Filtered Jobs</button>

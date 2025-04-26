@@ -27,6 +27,20 @@ function toggleEditDeliveryDate() {
     editDeliveryDateGroup.style.display = editStatusDropdown.value === 'Delivered' ? 'block' : 'none';
 }
 
+function toggleDeliveryDateFilter() {
+    const statusFilterDropdown = document.getElementById('filter-status');
+    const deliveryDateFilterDiv = document.getElementById('delivery-date-filter');
+    const dateFilterDiv = document.getElementById('date-filter');
+
+    if (statusFilterDropdown.value === 'Delivered') {
+        deliveryDateFilterDiv.style.display = 'block';
+        dateFilterDiv.style.display = 'none';
+    } else {
+        deliveryDateFilterDiv.style.display = 'none';
+        dateFilterDiv.style.display = 'block';
+    }
+}
+
 function addJob() {
     const date = document.getElementById('date').value;
     const clientName = document.getElementById('client-name').value;
@@ -65,6 +79,7 @@ function showAllJobs() {
     document.getElementById('jobs-table').style.display = 'table';
     document.getElementById('filter-section').style.display = 'block';
     renderJobs(jobs);
+    toggleDeliveryDateFilter(); // Ensure the filter visibility is correct when showing all jobs
 }
 
 function renderJobs(jobList) {
@@ -156,30 +171,86 @@ function deleteJob(index) {
     }
 }
 
-function filterJobs() {
-    const startDate = document.getElementById('filter-start-date').value;
-    const endDate = document.getElementById('filter-end-date').value;
-    const selectedStatus = document.getElementById('filter-status').value;
+function toggleDeliveryDateFilter() {
+    const statusFilterDropdown = document.getElementById('filter-status');
+    const deliveryDateFilterDiv = document.getElementById('delivery-date-filter');
+    const dateFilterDiv = document.getElementById('date-filter');
 
-    const filteredJobs = jobs.filter(job => {
-        const dateMatch = (!startDate || !endDate) || (new Date(job.date) >= new Date(startDate) && new Date(job.date) <= new Date(endDate));
-        const statusMatch = (selectedStatus === 'All') || (job.status === selectedStatus);
-        return dateMatch && statusMatch;
-    });
+    if (statusFilterDropdown.value === 'Delivered') {
+        deliveryDateFilterDiv.style.display = 'block';
+        dateFilterDiv.style.display = 'none';
+    } else {
+        deliveryDateFilterDiv.style.display = 'none';
+        dateFilterDiv.style.display = 'block';
+    }
+}
+
+function filterJobs() {
+    const selectedStatus = document.getElementById('filter-status').value;
+    let filteredJobs = jobs;
+
+    if (selectedStatus !== 'All') {
+        filteredJobs = filteredJobs.filter(job => job.status === selectedStatus);
+    }
+
+    if (selectedStatus === 'Delivered') {
+        const startDeliveryDate = document.getElementById('filter-start-delivery-date').value;
+        const endDeliveryDate = document.getElementById('filter-end-delivery-date').value;
+
+        if (startDeliveryDate) {
+            filteredJobs = filteredJobs.filter(job => job.delivery && new Date(job.delivery) >= new Date(startDeliveryDate));
+        }
+
+        if (endDeliveryDate) {
+            filteredJobs = filteredJobs.filter(job => job.delivery && new Date(job.delivery) <= new Date(endDeliveryDate));
+        }
+    } else {
+        const startDate = document.getElementById('filter-start-date').value;
+        const endDate = document.getElementById('filter-end-date').value;
+
+        if (startDate) {
+            filteredJobs = filteredJobs.filter(job => new Date(job.date) >= new Date(startDate));
+        }
+
+        if (endDate) {
+            filteredJobs = filteredJobs.filter(job => new Date(job.date) <= new Date(endDate));
+        }
+    }
 
     renderJobs(filteredJobs);
 }
 
 function downloadJobs() {
-    const startDateInput = document.getElementById('filter-start-date').value;
-    const endDateInput = document.getElementById('filter-end-date').value;
     const selectedStatus = document.getElementById('filter-status').value;
+    let filteredJobs = jobs;
 
-    const filteredJobs = jobs.filter(job => {
-        const dateMatch = (!startDateInput || !endDateInput) || (new Date(job.date) >= new Date(startDateInput) && new Date(job.date) <= new Date(endDateInput));
-        const statusMatch = (selectedStatus === 'All') || (job.status === selectedStatus);
-        return dateMatch && statusMatch;
-    });
+    if (selectedStatus !== 'All') {
+        filteredJobs = filteredJobs.filter(job => job.status === selectedStatus);
+    }
+
+    if (selectedStatus === 'Delivered') {
+        const startDeliveryDate = document.getElementById('filter-start-delivery-date').value;
+        const endDeliveryDate = document.getElementById('filter-end-delivery-date').value;
+
+        if (startDeliveryDate) {
+            filteredJobs = filteredJobs.filter(job => job.delivery && new Date(job.delivery) >= new Date(startDeliveryDate));
+        }
+
+        if (endDeliveryDate) {
+            filteredJobs = filteredJobs.filter(job => job.delivery && new Date(job.delivery) <= new Date(endDeliveryDate));
+        }
+    } else {
+        const startDateInput = document.getElementById('filter-start-date').value;
+        const endDateInput = document.getElementById('filter-end-date').value;
+
+        if (startDateInput) {
+            filteredJobs = filteredJobs.filter(job => new Date(job.date) >= new Date(startDateInput));
+        }
+
+        if (endDateInput) {
+            filteredJobs = filteredJobs.filter(job => new Date(job.date) <= new Date(endDateInput));
+        }
+    }
 
     if (filteredJobs.length === 0) {
         alert('No jobs to download based on the current filter.');
@@ -230,3 +301,4 @@ window.onload = loadJobs;
 // Initial call to hide delivery date on page load
 toggleDeliveryDate();
 toggleEditDeliveryDate();
+toggleDeliveryDateFilter(); // Call on load to set initial visibility
