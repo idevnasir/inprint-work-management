@@ -42,9 +42,11 @@
                 <div class="mb-3">
                     <label for="status" class="form-label">Status:</label>
                     <select id="status" class="form-select" onchange="toggleDeliveryDate()">
-                        <option value="Pending">Pending</option>
-                        <option value="Not Delivered">Not Delivered</option>
-                        <option value="Delivered">Delivered</option>
+                       <option value="Pending">Pending</option>
+                            <option value="Ready to print">Ready to print</option>
+                             <option value="printed">printed</option
+                            <option value="Delivered">Delivered</option>
+                            <option value="Cash Recieved">Cash Recieved</option>
                     </select>
                 </div>
                 <button type="button" onclick="addJob()" class="btn btn-primary"  style="border: none;background-color: #79b933;">Add Job</button>
